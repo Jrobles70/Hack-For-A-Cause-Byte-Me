@@ -90,20 +90,35 @@ def get_location():
     app.logger.debug("Get Location")
     pass
 
-@app.route("/_set_order")
-def set_order():
+@app.route("/_get_images")
+def get_images():
     # Pulls Mural data from mongo and sets order
     # TODO: This may not work
     long = request.args.get('long', 0, type=float)
     lat = request.args.get('lat', 0, type=float)
 
+    long_lat = [long,lat]
+
+    records = []
+
+    #TODO limit calling the entire DB
     if long is None or lat is None:
         # TODO: Fix to catch error
-        # TODO: Get request from DB
-        pass
+        for record in collection.find({"type": "mural"}).sort("mural_name", pymongo.ASCENDING):
+            record['mural_name'] = arrow.get(record['mural_name']).isoformat()
+            #TODO image logic
+            records.append(record)
 
-    # TODO: Get request from DB
-    pass
+        records = sorted(records, key=lambda k: k['mural_name'], reverse=True)
+    else:
+        for record in collection.find({"type": "mural"}).sort("long_lat", pymongo.ASCENDING):
+            record['mural_name'] = arrow.get(record['mural_name']).isoformat()
+            #TODO image logic
+            records.append(record)
+        #TODO edit to sort by euclidean distance
+        records = sorted(records, key=lambda k: k['long_lat'], reverse=True)
+
+    return records
 
 @app.route("/_upload_selfie")
 def upload_selfie():
@@ -132,4 +147,4 @@ def euclid_dist():
 if __name__ == "__main__":
     app.debug=CONFIG.DEBUG
     app.logger.setLevel(logging.DEBUG)
-    app.run(port=CONFIG.PORT,host="0.0.0.0")
+    app.run(port=CONFIG.PORT, host="0.0.0.0")
