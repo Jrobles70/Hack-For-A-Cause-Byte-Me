@@ -1,9 +1,11 @@
 
 import flask
+import sys
 from flask import g
 from flask import render_template
 from flask import request
 from flask import url_for
+from sklearn.metrics.pairwise import euclidean_distances
 
 import json
 import logging
@@ -92,8 +94,8 @@ def get_location():
 def set_order():
     # Pulls Mural data from mongo and sets order
     # TODO: This may not work
-    long = request.args.get('long', 0, type=double)
-    lat = request.args.get('lat', 0, type=double)
+    long = request.args.get('long', 0, type=float)
+    lat = request.args.get('lat', 0, type=float)
 
     if long is None or lat is None:
         # TODO: Fix to catch error
@@ -103,7 +105,15 @@ def set_order():
     # TODO: Get request from DB
     pass
 
-@app.route()
+@app.route("/_upload_selfie")
+def upload_selfie():
+    # TODO: Upload picture to separate
+    # http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
+    mural_name = request.args.get('mural_name', 0, type=str)
+
+    test = {"type": "selfie", "mural": mural_name}
+    collection.insert(test)
+    return flask.render_template('index.html')
 
 
 @app.errorhandler(404)
@@ -115,10 +125,9 @@ def page_not_found(error):
 
 def euclid_dist():
     # TODO: Use to sort by distance
+    # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.euclidean_distances.html
     pass
 
-def upload_selfie():
-    # TODO: Upload picture to separate
 
 if __name__ == "__main__":
     app.debug=CONFIG.DEBUG
