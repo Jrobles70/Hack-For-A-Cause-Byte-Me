@@ -33,10 +33,9 @@ import pymongo
 from bson.objectid import ObjectId
 import secrets.admin_secrets
 import secrets.client_secrets
-MONGO_CLIENT_URL = "mongodb://{}:{}@localhost:{}/{}".format(
+MONGO_CLIENT_URL = "mongodb+srv://{}:{}@{}".format(
     secrets.client_secrets.db_user,
     secrets.client_secrets.db_user_pw,
-    secrets.admin_secrets.port,
     secrets.client_secrets.db)
 
 ###
@@ -69,22 +68,55 @@ except:
 @app.route("/index")
 def index():
   app.logger.debug("Main page entry")
-  g.memos = get_memos()
-  for memo in g.memos:
-      app.logger.debug("Memo: " + str(memo))
+  # TODO: Get Mural data from db to send to client
   return flask.render_template('index.html')
 
 
-# We don't have an interface for creating memos yet
+@app.route("/mural")
+def mural():
+    # TODO: Gets selfies using mural id and send to client
+    pass
+
+
+@app.route("/submit_mural")
+def submit_mural():
+    # TODO: call submit mural form
+    pass
+
+
+@app.route("/admin_login")
+def admin_login():
+    # TODO: DO LAST
+    pass
+
+
 @app.route("/create")
 def create():
     app.logger.debug("Create")
     return flask.render_template('create.html')
 
 
-@app.route("/_example")
-def example():
+@app.route("/_get_location")
+def get_location():
+    app.logger.debug("Get Location")
+    pass
 
+@app.route("/_set_order")
+def set_order():
+    # Pulls Mural data from mongo and sets order
+    # TODO: This may not work
+    long = request.args.get('long', 0, type=double)
+    lat = request.args.get('lat', 0, type=double)
+
+    if long is None or lat is None:
+        # TODO: Fix to catch error
+        # TODO: Get request from DB
+        pass
+
+    # TODO: Get request from DB
+    pass
+
+@app.route()
 
 
 @app.errorhandler(404)
@@ -94,6 +126,12 @@ def page_not_found(error):
                                  badurl=request.base_url,
                                  linkback=url_for("index")), 404
 
+def euclid_dist():
+    # TODO: Use to sort by distance
+    pass
+
+def upload_selfie():
+    # TODO: Upload picture to separate
 
 if __name__ == "__main__":
     app.debug=CONFIG.DEBUG
