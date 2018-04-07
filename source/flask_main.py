@@ -1,16 +1,3 @@
-"""
-Flask web app connects to Mongo database.
-Keep a simple list of dated memoranda.
-
-Representation conventions for dates:
-   - We use Arrow objects when we want to manipulate dates, but for all
-     storage in database, in session or g objects, or anything else that
-     needs a text representation, we use ISO date strings.  These sort in the
-     order as arrow date objects, and they are easy to convert to and from
-     arrow date objects.  (For display on screen, we use the 'humanize' filter
-     below.) A time zone offset will
-   - User input/output is in local (to the server) time.
-"""
 
 import flask
 from flask import g
