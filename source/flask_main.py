@@ -97,15 +97,15 @@ def get_images():
     long = request.args.get('long', 0, type=float)
     lat = request.args.get('lat', 0, type=float)
 
-    long_lat = [long,lat]
+    long_lat = [long, lat]
 
     records = []
 
     #TODO limit calling the entire DB
     if long is None or lat is None:
         # TODO: Fix to catch error
-        for record in collection.find({"type": "mural"}).sort("mural_name", pymongo.ASCENDING):
-            record['mural_name'] = arrow.get(record['mural_name']).isoformat()
+        for record in collection.find({"type": "mural"}).sort("name", pymongo.ASCENDING):
+            record['name'] = arrow.get(record['name']).isoformat()
             #TODO image logic
             records.append(record)
 
