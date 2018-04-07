@@ -69,6 +69,17 @@ def mural():
 
 @app.route("/submit_mural")
 def submit_mural():
+    app.loger.debug("Submit Mural page entry")
+    image = request.form['image']
+    title = request.form['title']
+    address = request.form['address']
+    description = request.form['description']
+    # TODO:
+    # Get lat/long(double)
+    # Call method to add database using form information above
+    # Number of Visits
+
+
     # TODO: call submit mural form
     pass
 
